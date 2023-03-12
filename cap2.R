@@ -139,3 +139,25 @@ a10 |>
     y = "$ (millions)",
     title = "Australian antidiabetic drug sales"
   )
+
+
+holidays <- tourism |>
+  filter(Purpose == "Holiday") |>
+  group_by(State) |>
+  summarise(Trips = sum(Trips))
+
+holidays
+
+autoplot(holidays, Trips) +
+  labs(y = "Overnight trips ('000)",
+       title = "Australian domestic holidays")
+
+
+gg_season(holidays, Trips) +
+  labs(y = "Overnight trips ('000)",
+       title = "Australian domestic holidays")
+
+holidays |>
+  gg_subseries(Trips) +
+  labs(y = "Overnight trips ('000)",
+       title = "Australian domestic holidays")
