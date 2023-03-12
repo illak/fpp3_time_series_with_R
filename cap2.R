@@ -196,3 +196,18 @@ recent_production <- aus_production |>
 recent_production |>
   gg_lag(Beer, geom = "point") +
   labs(x = "lag(Beer, k)")
+
+
+# Autocorrelation ----
+recent_production |> ACF(Beer, lag_max = 9)
+
+recent_production |>
+  ACF(Beer) |>
+  autoplot() + labs(title="Australian beer production")
+
+
+# Trend and seasonality
+a10 |>
+  ACF(Cost, lag_max = 48) |>
+  autoplot() +
+  labs(title="Australian antidiabetic drug sales")
