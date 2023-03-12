@@ -1,7 +1,7 @@
 library(tidyverse)
 library(fpp3)
 library(tsibble)
-
+library(GGally)
 
 # tsibble extends tidy data frames (tibble)
 y <- tsibble(
@@ -161,3 +161,38 @@ holidays |>
   gg_subseries(Trips) +
   labs(y = "Overnight trips ('000)",
        title = "Australian domestic holidays")
+
+
+# Correlations ----
+
+vic_elec |>
+  filter(year(Time) == 2014) |>
+  ggplot(aes(x = Temperature, y = Demand)) +
+  geom_point() +
+  labs(x = "Temperature (degrees Celsius)",
+       y = "Electricity demand (GW)")
+
+
+visitors <- tourism |>
+  group_by(State) |>
+  summarise(Trips = sum(Trips))
+
+
+visitors |>
+  ggplot(aes(x = Quarter, y = Trips)) +
+  geom_line() +
+  facet_grid(vars(State), scales = "free_y") +
+  labs(title = "Australian domestic tourism",
+       y= "Overnight trips ('000)")
+
+visitors |>
+  pivot_wider(values_from=Trips, names_from=State) |>
+  GGally::ggpairs(columns = 2:9)
+
+# Lag plots ----
+recent_production <- aus_production |>
+  filter(year(Quarter) >= 2000)
+
+recent_production |>
+  gg_lag(Beer, geom = "point") +
+  labs(x = "lag(Beer, k)")
